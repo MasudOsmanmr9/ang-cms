@@ -1,0 +1,15 @@
+<p>create-colection works!</p>
+
+<form [formGroup]="collectionFormGroupHolder">
+    <ng-container *ngFor="let collectionConfig of createCollectionformschema | keyvalue">
+        <div class="mb-3" *ngIf="['id','type','name','list-api-url','submitUrl'].includes(collectionConfig.key)">
+            <label class="form-label">{{collectionConfig.key}} <span class="text-danger"
+                *ngIf="collectionFormGroupHolder.get(collectionConfig.key)?.hasError('required')">*</span></label>
+            <input type="text" [formControlName]="collectionConfig.key" class="form-control"
+              placeholder="Example input placeholder">
+            <span class="text-danger"
+              *ngIf="collectionFormGroupHolder.get(collectionConfig.key)?.hasError('required')">this
+              filed is required</span>
+          </div>
+    </ng-container>
+</form>
