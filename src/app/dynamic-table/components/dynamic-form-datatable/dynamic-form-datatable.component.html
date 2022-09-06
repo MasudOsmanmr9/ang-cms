@@ -10,7 +10,29 @@
       <section class="section">
         <div class="card">
           <div class="card-body">
-            <ngx-datatable class="material striped" class="second-table" *ngIf="headers[0] != null" [columnMode]="'force'" [rows]="rows" [columns]="headers"></ngx-datatable>
+            <ngx-datatable columnMode="flex" class="material striped" class="second-table" *ngIf="headers[0] != null" [columnMode]="'force'" [rows]="rows" [columns]="headers">
+              
+              <ng-container *ngFor="let header of headers">
+                <ngx-datatable-column [name]="header.name" [prop]='header.name' >
+                </ngx-datatable-column>
+              </ng-container>
+  
+              <ngx-datatable-column name="Actions" prop="edit">
+                <ng-template ngx-datatable-cell-template let-rowIndex="rowIndex" let-value="value"
+                                                 let-row="row">
+                                                 <button type="button" class="btn btn-outline-success"
+                                                     (click)='edit(value)'>Success {{rowIndex}}</button>
+                                                 <button type="button" class="btn btn-outline-danger"
+                                                     (click)='delete(value)'>Danger</button>
+             
+             
+                           </ng-template>
+                       </ngx-datatable-column>
+
+
+
+
+            </ngx-datatable>
             <!-- <ngx-datatable
               #table
               class="material striped"

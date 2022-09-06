@@ -1,5 +1,5 @@
 <div class="reactive-form">
-    <button type="button" class="btn btn-primary me-2" (click)="goTopage('/collections/schema-builder')" data-bs-toggle="modal" data-bs-target="#staticBackdrop">
+    <button type="button" class="btn btn-primary me-2" (click)="goTopage('/collections/collection-create')" data-bs-toggle="modal" data-bs-target="#staticBackdrop">
         Create Collection
       </button>
     <form *ngIf="formSchemas != null && formSchemas[0]!=null" [formGroup]="formGroupHolder" (submit)="submitForm()">
@@ -75,6 +75,6 @@
 
     <!-- <p>{{testText}}</p>
     <button (click)="changeText()">CHnage text</button> -->
-    <app-dynamic-form-datatable [tabledata]="storedTableData" [refText]="testText" ></app-dynamic-form-datatable>
+    <app-dynamic-form-datatable [tabledata]="storedTableData"  ></app-dynamic-form-datatable>
 
 </div>

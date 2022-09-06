@@ -11,7 +11,8 @@ export class DynamicFormDatatableComponent implements OnInit, OnChanges {
 
 
   @Input() tabledata: any[] = [];
-  @Input() refText: any;
+  @Input() includeHeaders: any[] = [];
+  @Input() excludeHeaders: any[] = [];
   public searchForm!: FormGroup;
   screenSize = 0;
   headers: any[] = [];
@@ -43,26 +44,13 @@ export class DynamicFormDatatableComponent implements OnInit, OnChanges {
 
     // this.changeEvent = this.changeTextFromParent;
   }
-  ngOnChanges(changes: SimpleChanges): void {
-
-    //console.log('ccccccccccccccccccccccccccccccc ::',changes)
-    // if(changes['tabledata']['currentValue']!=null && changes['tabledata']['currentValue']!=null && changes['tabledata']['currentValue']!=undefined){
-    //     this.createHeaders(changes['tabledata']['currentValue'][0]);
-    // }
-
-    if (this.tabledata != null && this.tabledata[0] != null && this.tabledata[0] != undefined && this.tabledata.length == 1) {
+  ngOnChanges(changes: SimpleChanges): void { 
+    // if (this.tabledata != null && this.tabledata[0] != null && this.tabledata[0] != undefined && this.headers.length == 0  && this.tabledata.length >= 1) {
+    if (this.headers.length == 0  && this.tabledata.length >= 1) {
       this.createHeaders(this.tabledata[0]);
     }
-
     this.rows = this.tabledata;
     this.dataRows = this.tabledata;
-    //this.totalRows = this.tabledata.length;
-    //console.log('this rowsssssss 12345',this.rows, this.headers);
-    // if(this.tabledata!=null && this.tabledata[0]!=null && this.tabledata[0]!=undefined){
-    //     this.createHeaders(this.tabledata[0]);
-    // }
-
-    //this.cd.detectChanges();
     return;
   }
 
@@ -70,39 +58,8 @@ export class DynamicFormDatatableComponent implements OnInit, OnChanges {
 
   ngOnInit(): void {
 
-    // this.searchForm = this.fb.group({
-    //   text: [null, [Validators.required]],
-    //   select: [null, [Validators.required]],
-    //   multiSelect: [null, [Validators.required]],
-    //   date: [null, [Validators.required]],
-    //   bool1: [false, [Validators.required]],
-    // });
-    
-    // if(BANK_LIST!=null && BANK_LIST[0]!=null && BANK_LIST[0]!=undefined){
-    //     this.createHeaders(BANK_LIST[0]);
-    // }
-    // this.rows = BANK_LIST;
-    // this.dataRows = BANK_LIST;
-    // this.totalRows = BANK_LIST.length;
-    // if(this.tabledata!=null && this.tabledata[0]!=null && this.tabledata[0]!=undefined){
-    //     this.createHeaders(this.tabledata[0]);
-    // }
-    // this.rows = this.tabledata;
-    // this.dataRows = this.tabledata;
-    // this.totalRows = this.tabledata.length;
-    // console.log(this.headers);
-    //console.log('init');
   }
 
-
-
-  changeText() {
-    this.refText = "This is a text from table componet";
-  }
-  changeTextFromParent() {
-    this.refText = "This is a text changed by parent";
-    return "This is a text from table componet";
-  }
   createHeaders(props: any) {
     if (props == null) {
       return;
@@ -115,8 +72,14 @@ export class DynamicFormDatatableComponent implements OnInit, OnChanges {
     // }
     let a = Object.keys(props)
     a.forEach((e) => {
-      let a = { 'name': e }
-      this.headers.push(a);
+      console.log('this.includeHeaders[0]',this.includeHeaders.length);
+      if(this.includeHeaders.length!=0 && this.includeHeaders.includes(e) && !this.excludeHeaders.includes(e)){
+        let a = { 'name': e }
+        this.headers.push(a);
+      }else if(this.includeHeaders.length == 0 && !this.excludeHeaders.includes(e)){
+        let a = { 'name': e }
+        this.headers.push(a);
+      }
     })
 
   }
@@ -128,5 +91,11 @@ export class DynamicFormDatatableComponent implements OnInit, OnChanges {
 
   }
 
+  edit(val:string){
+
+  }
+  delete(val:string){
+
+  }
 
 }

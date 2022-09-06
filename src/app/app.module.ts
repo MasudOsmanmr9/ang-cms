@@ -10,11 +10,13 @@ import { DynamicTableModule } from './dynamic-table/dynamic-table.module';
 import {SchemaBuilderService } from './services/schema-builder.service';
 import { PageNotFoundComponent } from './components/page-not-found/page-not-found.component'
 import { RouterModule } from '@angular/router';
+import { SidenavComponent } from './components/sidenav/sidenav.component';
 
 @NgModule({
   declarations: [
     AppComponent,
-    PageNotFoundComponent
+    PageNotFoundComponent,
+    SidenavComponent
   ],
   imports: [
     BrowserModule,

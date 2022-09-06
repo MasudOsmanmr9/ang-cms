@@ -9,6 +9,7 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { RouterModule } from '@angular/router';
 import { CollectionsHomeComponent } from './pages/collections-home/collections-home.component';
+import { DynamicTableModule } from '../dynamic-table/dynamic-table.module';
 
 
 
@@ -26,7 +27,8 @@ import { CollectionsHomeComponent } from './pages/collections-home/collections-h
     FormsModule,
     ReactiveFormsModule,
     NgbModule,
-    RouterModule
+    RouterModule,
+    DynamicTableModule
   ],
   
 })

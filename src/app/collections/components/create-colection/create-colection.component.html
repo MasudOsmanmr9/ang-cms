@@ -1,15 +1,38 @@
 <p>create-colection works!</p>
 
-<form [formGroup]="collectionFormGroupHolder">
+<form [formGroup]="collectionFormGroupHolder" (submit)="submitCollectionForm()">
     <ng-container *ngFor="let collectionConfig of createCollectionformschema | keyvalue">
         <div class="mb-3" *ngIf="['id','type','name','list-api-url','submitUrl'].includes(collectionConfig.key)">
             <label class="form-label">{{collectionConfig.key}} <span class="text-danger"
-                *ngIf="collectionFormGroupHolder.get(collectionConfig.key)?.hasError('required')">*</span></label>
+                    *ngIf="collectionFormGroupHolder.get(collectionConfig.key)?.hasError('required')">*</span></label>
             <input type="text" [formControlName]="collectionConfig.key" class="form-control"
-              placeholder="Example input placeholder">
+                placeholder="Example input placeholder">
             <span class="text-danger"
-              *ngIf="collectionFormGroupHolder.get(collectionConfig.key)?.hasError('required')">this
-              filed is required</span>
+                *ngIf="collectionFormGroupHolder.get(collectionConfig.key)?.hasError('required')">this
+                filed is required</span>
+        </div>
+        <div *ngIf="collectionConfig.key == 'table_actions'" class="d-flex flex-column" formGroupName="{{collectionConfig.key}}">
+            <div>
+                {{collectionConfig.key}}
+            </div>
+            <div class="me-2 mt-3">
+                <ng-container *ngFor="let actionConfig of collectionConfig.value">
+                    <label class="form-label me-2">{{actionConfig.key}}</label>
+                    <input type="checkbox" value=""  [formControlName]="actionConfig.key"
+                    class="form-check-input me-2">
+                </ng-container>
+            </div>
+        </div>
+        <div class="mb-3" *ngIf="collectionConfig.key === 'table_fields'">
+            <ng-select [items]="selectTableFieldOpt"  [addTag]="true" [multiple]="true"
+              placeholder="add select options" [formControlName]="collectionConfig.key">
+            </ng-select>
+
           </div>
+        <div *ngIf="collectionConfig.key == 'schema'">
+            <forms-schema-builder (newItemEvent)="tableFieldsList($event)"></forms-schema-builder>
+            <app-dynamic-form-datatable [tabledata]="formSchemaJson"  ></app-dynamic-form-datatable>
+        </div>
     </ng-container>
+    <button type="submit" class="btn btn-primary">Save Collection</button>
 </form>

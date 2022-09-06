@@ -1,4 +1,4 @@
-import { Component, ElementRef, Injectable, OnInit, ViewChild } from '@angular/core';
+import { Component, ElementRef, Injectable, OnInit, ViewChild,  Output, EventEmitter } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { NgSelectModule, NgOption } from '@ng-select/ng-select';
@@ -47,7 +47,7 @@ export interface selectFormSchema {
 export class FormsSchemaBuilderComponent implements OnInit {
 
   @ViewChild('schemaModalButton',{static:true}) schemaModalButton !:ElementRef;
-
+  @Output() newItemEvent = new EventEmitter<any>();
   errorShowOnSubmit:boolean = false;
   formGroupHolder!: FormGroup;
   schemaType: string = '';
@@ -142,6 +142,8 @@ export class FormsSchemaBuilderComponent implements OnInit {
       console.log('access');
       console.log(this.formGroupHolder, this.formGroupHolder.value, this.formGroupHolder.valid);
       this.ss.addToformSchemaCollection(this.formGroupHolder.value);
+      console.log('emitting event')
+      this.newItemEvent.emit(this.formGroupHolder.value);
       this.formGroupHolder.reset();
       this.schemaModalButton.nativeElement.click();
     }

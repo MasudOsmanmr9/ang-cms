@@ -4,7 +4,7 @@ import { PageNotFoundComponent } from './components/page-not-found/page-not-foun
 
 const routes: Routes = [
   // { path: '', redirectTo: 'collections/schema-builder', pathMatch: 'full'},
-  { path: '', redirectTo: 'collections/collection-create', pathMatch: 'full'},
+  { path: '', redirectTo: 'collections/collection-list', pathMatch: 'full'},
   {
     path: 'collections',
     loadChildren:()=>import('./collections/collections.module').then((m)=>m.CollectionsModule),

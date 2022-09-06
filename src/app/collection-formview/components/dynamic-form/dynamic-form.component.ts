@@ -5,6 +5,7 @@ import { NgbDateStruct } from '@ng-bootstrap/ng-bootstrap';
 import { NgSelectModule, NgOption } from '@ng-select/ng-select';
 import { forEachChild } from 'typescript';
 import { SchemaBuilderService} from 'src/app/services/schema-builder.service';
+import { CollectionsBuilderService } from 'src/app/services/collections-builder.service';
 
 
 
@@ -63,86 +64,87 @@ export class DynamicFormComponent implements OnInit {
   // selectedItems: any[] = [];
   storedTableData:any[]=[]
 
-  formSchemas: (FormSchema | selectFormSchema)[] = [
-    // formSchemas: FormSchema[] = [
-    {
-      "name": "firstName",
-      "label": "First name:",
-      "value": "",
-      "type": "text",
-      "validatopt": {
-        "required": true,
-        "minLength": 10,
-        "maxLength": 15,
-      }
-    },
-    {
-      "name": "password",
-      "label": "password",
-      "value": "",
-      "type": "password",
-      "validatopt": {
-        "required": true,
-        "minLength": 10,
-        "maxLength": 15,
-      }
-    },
-    {
-      "name": "lastName",
-      "label": "Last name:",
-      "value": "",
-      "type": "text",
-      "validatopt": {
-        "required": true,
-        "minLength": 10,
-        "maxLength": 15,
-      }
-    },
-    {
-      "name": "comments",
-      "label": "Comments",
-      "value": "",
-      "type": "textarea",
-      "validatopt": {
-        "required": true,
-        "minLength": 8,
-        "maxLength": 13,
-      }
-    },
-    {
-      "name": "agreeTerms",
-      "label": "This is a checkbox?",
-      "value": null,
-      "type": "checkbox",
-      "validatopt": {
-        "required": true,
-      }
-    },
-    {
-      "name": "size",
-      "label": "",
-      "value": "",
-      "type": "range",
-      "validatopt": {}
-    },
-    {
-      "name": "lightDark",
-      "label": "Do you like toggles?",
-      "value": true,
-      "type": "toggle",
-      "validatopt": {}
-    },
-    {
-      "name": "select-field",
-      "label": "select Country",
-      "value":null,
-      "multiple": false,
-      "selectOptions": [],
-      "validatopt": {},
-      "type": "select",
-    }
+  formSchemas : (FormSchema | selectFormSchema)[]=[]
+  // formSchemas: (FormSchema | selectFormSchema)[] = [
+  //   // formSchemas: FormSchema[] = [
+  //   {
+  //     "name": "firstName",
+  //     "label": "First name:",
+  //     "value": "",
+  //     "type": "text",
+  //     "validatopt": {
+  //       "required": true,
+  //       "minLength": 10,
+  //       "maxLength": 15,
+  //     }
+  //   },
+  //   {
+  //     "name": "password",
+  //     "label": "password",
+  //     "value": "",
+  //     "type": "password",
+  //     "validatopt": {
+  //       "required": true,
+  //       "minLength": 10,
+  //       "maxLength": 15,
+  //     }
+  //   },
+  //   {
+  //     "name": "lastName",
+  //     "label": "Last name:",
+  //     "value": "",
+  //     "type": "text",
+  //     "validatopt": {
+  //       "required": true,
+  //       "minLength": 10,
+  //       "maxLength": 15,
+  //     }
+  //   },
+  //   {
+  //     "name": "comments",
+  //     "label": "Comments",
+  //     "value": "",
+  //     "type": "textarea",
+  //     "validatopt": {
+  //       "required": true,
+  //       "minLength": 8,
+  //       "maxLength": 13,
+  //     }
+  //   },
+  //   {
+  //     "name": "agreeTerms",
+  //     "label": "This is a checkbox?",
+  //     "value": null,
+  //     "type": "checkbox",
+  //     "validatopt": {
+  //       "required": true,
+  //     }
+  //   },
+  //   {
+  //     "name": "size",
+  //     "label": "",
+  //     "value": "",
+  //     "type": "range",
+  //     "validatopt": {}
+  //   },
+  //   {
+  //     "name": "lightDark",
+  //     "label": "Do you like toggles?",
+  //     "value": true,
+  //     "type": "toggle",
+  //     "validatopt": {}
+  //   },
+  //   {
+  //     "name": "select-field",
+  //     "label": "select Country",
+  //     "value":null,
+  //     "multiple": false,
+  //     "selectOptions": [],
+  //     "validatopt": {},
+  //     "type": "select",
+  //   }
 
-  ];
+  // ];
 
   errorShowOnSubmit:boolean = false;
   validatorStore: any = {
@@ -154,20 +156,26 @@ export class DynamicFormComponent implements OnInit {
 
   testText = "THis is a home componenet text";
 
-  constructor(private fb: FormBuilder,private ss:SchemaBuilderService, private router :Router) { }
+  constructor(private fb: FormBuilder,private ss:SchemaBuilderService,
+     private cs: CollectionsBuilderService, private router :Router,) { }
 
-  changeText(){
-    this.testText = "This text was changed"
-  }
+  
   ngOnInit(): void {
-    //this.storedTableData = this.formSchemas;
-    this.formSchemas = this.ss.getformSchemaCollection();
-    // console.log('this.ss.getformSchemaCollection()',this.ss.getformSchemaCollection())
-    // console.log('this.formSchemas',this.formSchemas)
-    const gneratedGroupOpt = this.groupOptionFactory(this.formSchemas);
-    // console.log('generate group', gneratedGroupOpt);
-    this.formGroupHolder = this.fb.group(gneratedGroupOpt);
-    // console.log(this.formGroupHolder);
+    // this.formSchemas = this.ss.getformSchemaCollection();
+    // console.log('form schemaaaaaaaaaaaaaaaaaaaaas',this.formSchemas);
+    // if(this.cs.getSelectedCollection() != null){
+    //   this.formSchemas = this.cs.getSelectedCollection()['schema'];
+    //   console.log('this.formSchemassssssssssssssss',this.formSchemas);
+    // }
+    // const gneratedGroupOpt = this.groupOptionFactory(this.formSchemas);
+    // this.formGroupHolder = this.fb.group(gneratedGroupOpt);
+    this.cs.collectionChangeEvent.subscribe((collection:any)=>{
+      console.log('this is collectionnnnnnnnnnnnnnnnnnnnnn',collection.schema);
+      this.formSchemas = collection.schema;
+      const gneratedGroupOpt = this.groupOptionFactory(this.formSchemas);
+      this.formGroupHolder = this.fb.group(gneratedGroupOpt);
+
+    })
   }
 
 
@@ -189,10 +197,8 @@ export class DynamicFormComponent implements OnInit {
   groupOptionFactory(formConfig: (FormSchema | selectFormSchema)[]): any {
     let tempGroup: any = {}
     formConfig.forEach((element: FormSchema | selectFormSchema) => {
-      //console.log(element.name);
       tempGroup[element.name] = [element.value ?? '', this.validatorFactory(element.validatopt)]
     });
-    // console.log(tempGroup);
     return tempGroup;
   }
 
@@ -204,12 +210,9 @@ export class DynamicFormComponent implements OnInit {
   }
   submitForm() {
     this.errorShowOnSubmit = true;
-    // console.log(this.formGroupHolder, this.formGroupHolder.value, this.formGroupHolder.valid);
     if(this.formGroupHolder.valid){
       let newRowData = [...this.storedTableData,this.formGroupHolder.value];
-      //this.storedTableData.push(this.formGroupHolder.value);
       this.storedTableData = newRowData;
-      // console.log('this.storedTableData',this.storedTableData);
       this.testText = 'working';
     }
   }

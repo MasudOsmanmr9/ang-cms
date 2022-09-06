@@ -6,6 +6,7 @@ import { Injectable } from '@angular/core';
 export class SchemaBuilderService {
 
   formSchemaJson:any[] = []
+  currentSchemaJson:any;
 
   constructor() { 
     this.formSchemaJson = JSON.parse(localStorage.getItem('formSchema')!)?? [];
@@ -17,6 +18,7 @@ export class SchemaBuilderService {
       return;
     }
     this.formSchemaJson.push(schema);
+    this.currentSchemaJson = schema;
     console.log(this.formSchemaJson);
     localStorage.setItem("formSchema", JSON.stringify(this.formSchemaJson));
   }
@@ -28,4 +30,5 @@ export class SchemaBuilderService {
   getformSchemaCollection():any{
     return this.formSchemaJson;
   }
+
 }
