@@ -4,7 +4,7 @@ import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms'
 import { NgbDateStruct } from '@ng-bootstrap/ng-bootstrap';
 import { NgSelectModule, NgOption } from '@ng-select/ng-select';
 import { forEachChild } from 'typescript';
-import { SchemaBuilderService} from 'src/app/services/schema-builder.service';
+import { SchemaBuilderService } from 'src/app/services/schema-builder.service';
 import { CollectionsBuilderService } from 'src/app/services/collections-builder.service';
 
 
@@ -24,7 +24,7 @@ export interface selectFormSchema {
   label: string;
   type: string;
   validatopt: any;
-  value:any;
+  value: any;
   // options?: Options
   selectOptions?: any[]
   multiple: boolean
@@ -51,6 +51,7 @@ interface Options {
 export class DynamicFormComponent implements OnInit {
 
   formGroupHolder!: FormGroup;
+  date = new Date();
   // dt: any;
   // cities = [
   //   { id: 1, name: 'Vilnius' },
@@ -62,9 +63,10 @@ export class DynamicFormComponent implements OnInit {
   // selectedCity: any;
   // selectedItem: any;
   // selectedItems: any[] = [];
-  storedTableData:any[]=[]
+  storedTableData: any[] = [];
+  tableFields: any[] = [];
 
-  formSchemas : (FormSchema | selectFormSchema)[]=[]
+  formSchemas: (FormSchema | selectFormSchema)[] = []
   // formSchemas: (FormSchema | selectFormSchema)[] = [
   //   // formSchemas: FormSchema[] = [
   //   {
@@ -146,7 +148,8 @@ export class DynamicFormComponent implements OnInit {
 
   // ];
 
-  errorShowOnSubmit:boolean = false;
+  
+  errorShowOnSubmit: boolean = false;
   validatorStore: any = {
     'required': Validators.required,
     'maxLength': (val: number) => Validators.maxLength(val),
@@ -156,10 +159,10 @@ export class DynamicFormComponent implements OnInit {
 
   testText = "THis is a home componenet text";
 
-  constructor(private fb: FormBuilder,private ss:SchemaBuilderService,
-     private cs: CollectionsBuilderService, private router :Router,) { }
+  constructor(private fb: FormBuilder, private ss: SchemaBuilderService,
+    private cs: CollectionsBuilderService, private router: Router,) { }
 
-  
+
   ngOnInit(): void {
     // this.formSchemas = this.ss.getformSchemaCollection();
     // console.log('form schemaaaaaaaaaaaaaaaaaaaaas',this.formSchemas);
@@ -169,24 +172,31 @@ export class DynamicFormComponent implements OnInit {
     // }
     // const gneratedGroupOpt = this.groupOptionFactory(this.formSchemas);
     // this.formGroupHolder = this.fb.group(gneratedGroupOpt);
-    this.cs.collectionChangeEvent.subscribe((collection:any)=>{
-      console.log('this is collectionnnnnnnnnnnnnnnnnnnnnn',collection.schema);
+    this.cs.collectionChangeEvent.subscribe((collection: any) => {
+      console.log('this is collectionnnnnnnnnnnnnnnnnnnnnn',collection ,collection.schema);
       this.formSchemas = collection.schema;
       const gneratedGroupOpt = this.groupOptionFactory(this.formSchemas);
       this.formGroupHolder = this.fb.group(gneratedGroupOpt);
-
+      this.storedTableData = [];
+      this.tableFields = collection.table_fields??[];
     })
+    this.cs.collectionChangeEvent.emit(this.cs.getSelectedCollection());
   }
 
-
+  editf: Function = (value:any)=>{
+    console.log('this is working for edit',value);
+  }
+  deletef: Function = (value:any)=>{
+    console.log('this is working for delete',value);
+  }
 
 
   validatorFactory(validateOpt: any): Validators[] | any {
     let vlds: Validators[] = [];
     for (const opt in validateOpt) {
       if (['min', 'max', 'minLength', 'maxLength'].includes(opt)) {
-        validateOpt[opt] == null?'':vlds.push(this.validatorStore[opt](validateOpt[opt]))
-      } else if(validateOpt[opt]) {
+        validateOpt[opt] == null ? '' : vlds.push(this.validatorStore[opt](validateOpt[opt]))
+      } else if (validateOpt[opt]) {
         vlds.push(this.validatorStore[opt]);
         // console.log('vldsssssssssssss ',vlds)
       }
@@ -205,13 +215,16 @@ export class DynamicFormComponent implements OnInit {
 
 
   // methodssssssssssssssssssss
-  goTopage(path:string){
+  goTopage(path: string) {
     this.router.navigateByUrl(path);
   }
   submitForm() {
     this.errorShowOnSubmit = true;
-    if(this.formGroupHolder.valid){
-      let newRowData = [...this.storedTableData,this.formGroupHolder.value];
+    if (this.formGroupHolder.valid) {
+      let newRow = this.formGroupHolder.value
+      newRow['id'] = this.date.getTime();
+      let newRowData = [...this.storedTableData, newRow];
+      //console.log('new row data dynamic form',newRowData);
       this.storedTableData = newRowData;
       this.testText = 'working';
     }

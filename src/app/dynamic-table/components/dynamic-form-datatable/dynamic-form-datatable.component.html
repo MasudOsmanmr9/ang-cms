@@ -17,13 +17,13 @@
                 </ngx-datatable-column>
               </ng-container>
   
-              <ngx-datatable-column name="Actions" prop="edit">
+              <ngx-datatable-column *ngIf="editFunc!=null || deleteFunc!=null" name="Actions" prop="edit">
                 <ng-template ngx-datatable-cell-template let-rowIndex="rowIndex" let-value="value"
                                                  let-row="row">
-                                                 <button type="button" class="btn btn-outline-success"
-                                                     (click)='edit(value)'>Success {{rowIndex}}</button>
-                                                 <button type="button" class="btn btn-outline-danger"
-                                                     (click)='delete(value)'>Danger</button>
+                                                 <button *ngIf="editFunc!=null" type="button" class="btn btn-outline-success"
+                                                     (click)='edit(row)'>Success {{rowIndex}}</button>
+                                                 <button *ngIf="deleteFunc!=null" type="button" class="btn btn-outline-danger"
+                                                     (click)='delete(row)'>Danger</button>
              
              
                            </ng-template>

@@ -18,4 +18,11 @@ export class CollectionListsComponent implements OnInit {
     //this.goTopage('/')
   }
 
+  collectionEditf: Function = (value:any)=>{
+    console.log('this is working for edit',value);
+  }
+  collectionDeletef: Function = (value:any)=>{
+    console.log('this is working for delete',value);
+  }
+
 }

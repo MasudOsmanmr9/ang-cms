@@ -2,4 +2,8 @@
 <div class="d-flex justify-content-end">
     <a routerLink="/collections/collection-create" class="btn btn-primary">Create Collection</a>
 </div>
-<app-dynamic-form-datatable [includeHeaders]="fieldsPermission" [tabledata]="collectionsLists"  ></app-dynamic-form-datatable>
+<app-dynamic-form-datatable 
+[includeHeaders]="fieldsPermission" 
+[tabledata]="collectionsLists" 
+[editFunc]="collectionEditf"
+    [deleteFunc]="collectionDeletef"></app-dynamic-form-datatable>

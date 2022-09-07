@@ -13,6 +13,8 @@ export class DynamicFormDatatableComponent implements OnInit, OnChanges {
   @Input() tabledata: any[] = [];
   @Input() includeHeaders: any[] = [];
   @Input() excludeHeaders: any[] = [];
+  @Input() editFunc?: Function;
+  @Input() deleteFunc?: Function;
   public searchForm!: FormGroup;
   screenSize = 0;
   headers: any[] = [];
@@ -44,9 +46,9 @@ export class DynamicFormDatatableComponent implements OnInit, OnChanges {
 
     // this.changeEvent = this.changeTextFromParent;
   }
-  ngOnChanges(changes: SimpleChanges): void { 
+  ngOnChanges(changes: SimpleChanges): void {
     // if (this.tabledata != null && this.tabledata[0] != null && this.tabledata[0] != undefined && this.headers.length == 0  && this.tabledata.length >= 1) {
-    if (this.headers.length == 0  && this.tabledata.length >= 1) {
+    if (this.headers.length == 0 && this.tabledata.length >= 1) {
       this.createHeaders(this.tabledata[0]);
     }
     this.rows = this.tabledata;
@@ -57,7 +59,8 @@ export class DynamicFormDatatableComponent implements OnInit, OnChanges {
 
 
   ngOnInit(): void {
-
+    // console.log('here it comes edit',this.editFunc);
+    // console.log('here it comes delete',this.deleteFunc);
   }
 
   createHeaders(props: any) {
@@ -72,11 +75,11 @@ export class DynamicFormDatatableComponent implements OnInit, OnChanges {
     // }
     let a = Object.keys(props)
     a.forEach((e) => {
-      console.log('this.includeHeaders[0]',this.includeHeaders.length);
-      if(this.includeHeaders.length!=0 && this.includeHeaders.includes(e) && !this.excludeHeaders.includes(e)){
+      console.log('this.includeHeaders[0]', this.includeHeaders.length);
+      if (this.includeHeaders.length != 0 && this.includeHeaders.includes(e) && !this.excludeHeaders.includes(e)) {
         let a = { 'name': e }
         this.headers.push(a);
-      }else if(this.includeHeaders.length == 0 && !this.excludeHeaders.includes(e)){
+      } else if (this.includeHeaders.length == 0 && !this.excludeHeaders.includes(e)) {
         let a = { 'name': e }
         this.headers.push(a);
       }
@@ -91,11 +94,11 @@ export class DynamicFormDatatableComponent implements OnInit, OnChanges {
 
   }
 
-  edit(val:string){
-
+  edit(val: any) {
+    this.editFunc != null? this.editFunc(val): '';
   }
-  delete(val:string){
-
+  delete(val: any) {
+    this.deleteFunc != null? this.deleteFunc(val):'';
   }
 
 }

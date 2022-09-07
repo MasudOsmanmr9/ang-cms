@@ -75,6 +75,11 @@
 
     <!-- <p>{{testText}}</p>
     <button (click)="changeText()">CHnage text</button> -->
-    <app-dynamic-form-datatable [tabledata]="storedTableData"  ></app-dynamic-form-datatable>
+    <app-dynamic-form-datatable *ngIf="storedTableData.length" 
+    [includeHeaders]="tableFields" 
+    [tabledata]="storedTableData" 
+    [editFunc]="editf"
+    [deleteFunc]="deletef"
+    ></app-dynamic-form-datatable>
 
 </div>
