@@ -9,11 +9,15 @@ import { DynamicTableModule } from '../dynamic-table/dynamic-table.module';
 
 import { DynamicFormDatatableComponent } from '../dynamic-table/components/dynamic-form-datatable/dynamic-form-datatable.component';
 import { FormviewHomeComponent } from './pages/formview-home/formview-home.component';
+import { FormDataPageComponent } from './components/form-data-page/form-data-page.component';
+import { DynamicFormPageComponent } from './components/dynamic-form-page/dynamic-form-page.component';
 
 @NgModule({
   declarations: [
     DynamicFormComponent,
     FormviewHomeComponent,
+    FormDataPageComponent,
+    DynamicFormPageComponent,
     // DynamicFormDatatableComponent
   ],
   imports: [

@@ -11,6 +11,10 @@ import {SchemaBuilderService } from './services/schema-builder.service';
 import { PageNotFoundComponent } from './components/page-not-found/page-not-found.component'
 import { RouterModule } from '@angular/router';
 import { SidenavComponent } from './components/sidenav/sidenav.component';
+import { UserModule } from './user/user.module';
+import { AuthModule } from './auth/auth.module';
+import { CollectionsBuilderService } from './services/collections-builder.service';
+import { FormBuilderService } from './services/form-builder.service';
 
 @NgModule({
   declarations: [
@@ -25,9 +29,11 @@ import { SidenavComponent } from './components/sidenav/sidenav.component';
     CollectionFormviewModule,
     CollectionsModule,
     DynamicTableModule,
-    RouterModule
+    RouterModule,
+    UserModule,
+    AuthModule
   ],
-  providers: [SchemaBuilderService],
+  providers: [SchemaBuilderService,CollectionsBuilderService,FormBuilderService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

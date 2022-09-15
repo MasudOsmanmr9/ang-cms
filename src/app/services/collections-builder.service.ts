@@ -40,10 +40,21 @@ export class CollectionsBuilderService {
       }
     })
     console.log('access')
-    this.router.navigateByUrl('/formview/formgenerate');
+    // this.router.navigateByUrl('/formview/formgenerate');
+    this.router.navigateByUrl('/formview/schemadata');
    // return scollection;
   }
   getSelectedCollection():any{
     return this.currentCollection;
+  }
+
+  getCollectionById(id:number):any{
+    let tmpCollection:any;
+    this.collectionsSchemaJson.forEach((collection)=>{
+      if(collection.id == id){
+        tmpCollection = collection;
+      }
+    })
+    return tmpCollection;
   }
 }

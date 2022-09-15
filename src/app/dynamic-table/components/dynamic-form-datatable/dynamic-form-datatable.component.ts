@@ -48,6 +48,9 @@ export class DynamicFormDatatableComponent implements OnInit, OnChanges {
   }
   ngOnChanges(changes: SimpleChanges): void {
     // if (this.tabledata != null && this.tabledata[0] != null && this.tabledata[0] != undefined && this.headers.length == 0  && this.tabledata.length >= 1) {
+    if(changes['tabledata'].currentValue != changes['tabledata'].previousValue){
+      this.headers=[];
+    }
     if (this.headers.length == 0 && this.tabledata.length >= 1) {
       this.createHeaders(this.tabledata[0]);
     }
@@ -64,6 +67,7 @@ export class DynamicFormDatatableComponent implements OnInit, OnChanges {
   }
 
   createHeaders(props: any) {
+    console.log('create headersssssssssssssssssssssssssssssssssssssssssss',props);
     if (props == null) {
       return;
     }

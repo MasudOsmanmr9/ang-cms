@@ -12,6 +12,9 @@ const routes: Routes = [
   {
     path: 'formview', loadChildren:()=>import('./collection-formview/collection-formview.module').then((m)=> m.CollectionFormviewModule)
   },
+  {
+    path: 'user', loadChildren:()=>import('./user/user.module').then((m)=> m.UserModule)
+  },
   // {
   //   path: 'create-collection', component: FieldtypebuilderComponent
   // },

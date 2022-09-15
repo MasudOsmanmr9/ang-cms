@@ -14,7 +14,6 @@ export class CollectionListsComponent implements OnInit {
 
   ngOnInit(): void {
     this.collectionsLists = [...this.cs.getcollectionsList()];
-    console.log('this.collectionlists',this.collectionsLists);
     //this.goTopage('/')
   }
 

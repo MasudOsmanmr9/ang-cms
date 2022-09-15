@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Input, OnChanges, OnInit, SimpleChanges } from '@angular/core';
 import { Router } from '@angular/router';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { NgbDateStruct } from '@ng-bootstrap/ng-bootstrap';
@@ -6,6 +6,7 @@ import { NgSelectModule, NgOption } from '@ng-select/ng-select';
 import { forEachChild } from 'typescript';
 import { SchemaBuilderService } from 'src/app/services/schema-builder.service';
 import { CollectionsBuilderService } from 'src/app/services/collections-builder.service';
+import { FormBuilderService } from 'src/app/services/form-builder.service';
 
 
 
@@ -48,25 +49,15 @@ interface Options {
   templateUrl: './dynamic-form.component.html',
   styleUrls: ['./dynamic-form.component.css']
 })
-export class DynamicFormComponent implements OnInit {
+export class DynamicFormComponent implements OnInit, OnChanges {
 
+  @Input() dynamicformSchema: FormSchema[] = [];
+  @Input() currentCollection: any;
+  @Input() editData?: any;
   formGroupHolder!: FormGroup;
-  date = new Date();
-  // dt: any;
-  // cities = [
-  //   { id: 1, name: 'Vilnius' },
-  //   { id: 2, name: 'Kaunas' },
-  //   { id: 3, name: 'Pavilnys', disabled: true },
-  //   { id: 4, name: 'Pabradė' },
-  //   { id: 5, name: 'Klaipėda' }
-  // ];
-  // selectedCity: any;
-  // selectedItem: any;
-  // selectedItems: any[] = [];
-  storedTableData: any[] = [];
-  tableFields: any[] = [];
-
-  formSchemas: (FormSchema | selectFormSchema)[] = []
+  date!: Date;
+  formSchemas: FormSchema[] = []
+  // formSchemas: (FormSchema | selectFormSchema)[] = []
   // formSchemas: (FormSchema | selectFormSchema)[] = [
   //   // formSchemas: FormSchema[] = [
   //   {
@@ -80,28 +71,7 @@ export class DynamicFormComponent implements OnInit {
   //       "maxLength": 15,
   //     }
   //   },
-  //   {
-  //     "name": "password",
-  //     "label": "password",
-  //     "value": "",
-  //     "type": "password",
-  //     "validatopt": {
-  //       "required": true,
-  //       "minLength": 10,
-  //       "maxLength": 15,
-  //     }
-  //   },
-  //   {
-  //     "name": "lastName",
-  //     "label": "Last name:",
-  //     "value": "",
-  //     "type": "text",
-  //     "validatopt": {
-  //       "required": true,
-  //       "minLength": 10,
-  //       "maxLength": 15,
-  //     }
-  //   },
+
   //   {
   //     "name": "comments",
   //     "label": "Comments",
@@ -148,7 +118,7 @@ export class DynamicFormComponent implements OnInit {
 
   // ];
 
-  
+
   errorShowOnSubmit: boolean = false;
   validatorStore: any = {
     'required': Validators.required,
@@ -157,39 +127,31 @@ export class DynamicFormComponent implements OnInit {
     'email': Validators.email
   }
 
-  testText = "THis is a home componenet text";
-
   constructor(private fb: FormBuilder, private ss: SchemaBuilderService,
-    private cs: CollectionsBuilderService, private router: Router,) { }
+    private cs: CollectionsBuilderService, private router: Router,
+    private fbs: FormBuilderService) { }
 
 
   ngOnInit(): void {
-    // this.formSchemas = this.ss.getformSchemaCollection();
-    // console.log('form schemaaaaaaaaaaaaaaaaaaaaas',this.formSchemas);
-    // if(this.cs.getSelectedCollection() != null){
-    //   this.formSchemas = this.cs.getSelectedCollection()['schema'];
-    //   console.log('this.formSchemassssssssssssssss',this.formSchemas);
-    // }
-    // const gneratedGroupOpt = this.groupOptionFactory(this.formSchemas);
-    // this.formGroupHolder = this.fb.group(gneratedGroupOpt);
-    this.cs.collectionChangeEvent.subscribe((collection: any) => {
-      console.log('this is collectionnnnnnnnnnnnnnnnnnnnnn',collection ,collection.schema);
-      this.formSchemas = collection.schema;
-      const gneratedGroupOpt = this.groupOptionFactory(this.formSchemas);
-      this.formGroupHolder = this.fb.group(gneratedGroupOpt);
-      this.storedTableData = [];
-      this.tableFields = collection.table_fields??[];
-    })
-    this.cs.collectionChangeEvent.emit(this.cs.getSelectedCollection());
+    // console.log('dynamic form ngoninit accessed');
   }
 
-  editf: Function = (value:any)=>{
-    console.log('this is working for edit',value);
-  }
-  deletef: Function = (value:any)=>{
-    console.log('this is working for delete',value);
-  }
+  ngOnChanges(changes: SimpleChanges): void {
+    this.formSchemas = this.dynamicformSchema
+    let obj: any = {
+      label: "id",
+      name: "id",
+      selectOptions: null,
+      type: "text",
+      validatopt: { required: "", minLength: null, maxLength: null },
+      value: null
+    }
 
+    let tempSchema:any[] = this.formSchemas
+    const gneratedGroupOpt = this.groupOptionFactory(this.formSchemas);
+    this.formGroupHolder = this.fb.group(gneratedGroupOpt);
+    return;
+  }
 
   validatorFactory(validateOpt: any): Validators[] | any {
     let vlds: Validators[] = [];
@@ -198,7 +160,6 @@ export class DynamicFormComponent implements OnInit {
         validateOpt[opt] == null ? '' : vlds.push(this.validatorStore[opt](validateOpt[opt]))
       } else if (validateOpt[opt]) {
         vlds.push(this.validatorStore[opt]);
-        // console.log('vldsssssssssssss ',vlds)
       }
     }
     return vlds;
@@ -206,42 +167,46 @@ export class DynamicFormComponent implements OnInit {
 
   groupOptionFactory(formConfig: (FormSchema | selectFormSchema)[]): any {
     let tempGroup: any = {}
-    formConfig.forEach((element: FormSchema | selectFormSchema) => {
-      tempGroup[element.name] = [element.value ?? '', this.validatorFactory(element.validatopt)]
+    formConfig?.forEach((element: FormSchema | selectFormSchema) => {
+      if (this.editData != null || this.editData != undefined) {
+        tempGroup[element.name] = [this.editData[element.name] ?? '', this.validatorFactory(element.validatopt)];
+      } else {
+        tempGroup[element.name] = [element.value ?? '', this.validatorFactory(element.validatopt)];
+      }
     });
     return tempGroup;
   }
 
 
-
-  // methodssssssssssssssssssss
   goTopage(path: string) {
     this.router.navigateByUrl(path);
   }
   submitForm() {
     this.errorShowOnSubmit = true;
     if (this.formGroupHolder.valid) {
-      let newRow = this.formGroupHolder.value
-      newRow['id'] = this.date.getTime();
-      let newRowData = [...this.storedTableData, newRow];
-      //console.log('new row data dynamic form',newRowData);
-      this.storedTableData = newRowData;
-      this.testText = 'working';
+      let date = new Date();
+      let newRow = { ...this.formGroupHolder.value }
+      newRow['id'] = this.editData!=null?this.editData.id: date.getTime();
+      newRow['schemaId'] = this.fbs.getCurrentCollectionInfo()['id'];
+      this.fbs.setStoredTableData(newRow);
+      this.formGroupHolder.reset();
+      this.fbs.setEditData(null);
+      this.router.navigateByUrl('/formview/schemadata');
     }
   }
-  getLoanType() {
-    this.formGroupHolder.get('loanType')?.value;
-  }
-  setLoanTypeValue() {
-    let abc = {
-      'loanName': [null, [Validators.required]],
-      'loanType': [],
-      'loanDescription': [],
-    }
+  // getLoanType() {
+  //   this.formGroupHolder.get('loanType')?.value;
+  // }
+  // setLoanTypeValue() {
+  //   let abc = {
+  //     'loanName': [null, [Validators.required]],
+  //     'loanType': [],
+  //     'loanDescription': [],
+  //   }
 
-    // have to pass all property in abc obj
-    this.formGroupHolder.setValue(abc);
-    // dont have to pass all property in abc obj
-    this.formGroupHolder.patchValue(abc);
-  }
+  //   // have to pass all property in abc obj
+  //   this.formGroupHolder.setValue(abc);
+  //   // dont have to pass all property in abc obj
+  //   this.formGroupHolder.patchValue(abc);
+  // }
 }
